@@ -34,8 +34,9 @@ Run a scraper with, for example:
 
 ## Deployment
 
-    heroku addons:add rediscloud
+    heroku addons:add flydata
     heroku addons:add mongolab
+    heroku addons:add rediscloud
     heroku addons:add scheduler
 
 Add configuration variables (replace `REPLACE`):
