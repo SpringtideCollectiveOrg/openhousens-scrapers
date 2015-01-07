@@ -48,6 +48,6 @@ Add configuration variables (replace `REPLACE`):
 Schedule jobs to run daily, for example:
 
     ruby ca_ns/scraper.rb --pipelined -q -t people
-    ruby ca_ns/scraper.rb --pipelined -q -a scrape -a import -a akoma_ntoso -- down-to `date +%Y-%m-%d` no-clobber 1
+    ruby ca_ns/scraper.rb --pipelined -q -a scrape -a import -a akoma_ntoso -- down-to `date -d yesterday +%Y-%m-%d` no-clobber 1
 
 Copyright (c) 2013 Open North Inc., released under the MIT license
