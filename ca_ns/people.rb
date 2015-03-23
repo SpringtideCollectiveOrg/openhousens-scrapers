@@ -44,6 +44,8 @@ class NovaScotia
     create_person(person, 'http://nslegislature.ca/index.php/people/members/john_macdonnell')
 
     get('http://nslegislature.ca/index.php/people/members/').css('#content tbody tr').each do |tr|
+      next if tr.text[/\bVacant\b/]
+
       tds = tr.css('td')
 
       # Create the person.
