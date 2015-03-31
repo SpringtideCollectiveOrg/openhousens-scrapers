@@ -1,19 +1,23 @@
 class NovaScotia
   def scrape_people
     party_ids = {}
-    { 'Liberal' => 'Nova Scotia Liberal Party',
-      'NDP' => 'Nova Scotia New Democratic Party',
-      'PC' => 'Progressive Conservative Association of Nova Scotia',
-      'I' => 'Independent',
-    }.each do |abbreviation,name|
+    { 'Nova Scotia Liberal Party' => ['Liberal'],
+      'Nova Scotia New Democratic Party' => ['NDP'],
+      'Progressive Conservative Association of Nova Scotia' => ['PC'],
+      'Independent' => ['I', 'Ind'],
+    }.each do |name,abbreviations|
       organization = Pupa::Organization.new({
         name: name,
         classification: 'political party',
       })
-      organization.add_name(abbreviation)
       organization.add_source('http://electionsnovascotia.ca/candidates-and-parties/registered-parties', note: 'Elections Nova Scotia')
+      abbreviations.each do |abbreviation|
+        organization.add_name(abbreviation)
+      end
       dispatch(organization)
-      party_ids[abbreviation] = organization._id
+      abbreviations.each do |abbreviation|
+        party_ids[abbreviation] = organization._id
+      end
     end
 
     legislature = Pupa::Organization.new({
