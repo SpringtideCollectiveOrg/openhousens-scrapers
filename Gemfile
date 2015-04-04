@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.1.5'
+ruby '2.2.0'
 
 gem 'activemodel'
 gem 'faraday_middleware', git: 'https://github.com/lostisland/faraday_middleware.git' # Gzip not in 0.9.1
