@@ -1,10 +1,10 @@
 class NovaScotia
   def scrape_people
     party_ids = {}
-    { 'Nova Scotia Liberal Party' => ['Liberal'],
+    { 'Nova Scotia Liberal Party' => ['LIB'],
       'Nova Scotia New Democratic Party' => ['NDP'],
       'Progressive Conservative Association of Nova Scotia' => ['PC'],
-      'Independent' => ['I', 'Ind'],
+      'Independent' => ['IND'],
     }.each do |name,abbreviations|
       organization = Pupa::Organization.new({
         name: name,
@@ -47,7 +47,7 @@ class NovaScotia
     })
     create_person(person, 'http://nslegislature.ca/index.php/people/members/john_macdonnell')
 
-    get('http://nslegislature.ca/index.php/people/members/').css('#content tbody tr').each do |tr|
+    get('http://nslegislature.ca/index.php/people/member-bios').css('#content tbody tr').each do |tr|
       next if tr.text[/\bVacant\b/]
 
       tds = tr.css('td')
@@ -55,7 +55,7 @@ class NovaScotia
       # Create the person.
       url = "http://nslegislature.ca#{tr.at_css('a')[:href]}"
       doc = get(url)
-      characters = doc.at_css('dd script').text.scan(/'( \d+|..?)'/).flatten.reverse
+      script = doc.at_css('dd script')
       family_name, given_name = tds[0].text.split(', ', 2)
 
       person = Pupa::Person.new({
@@ -63,9 +63,14 @@ class NovaScotia
         family_name: family_name,
         given_name: given_name,
         sort_name: "#{family_name.sub(/\Ad'/, '')}, #{given_name}",
-        email: characters[characters.index('>') + 1..characters.rindex('<') - 1].map{|c| Integer(c).chr}.join,
         image: doc.at_css('.portrait')[:src],
       })
+
+      if script
+        characters = script.text.scan(/'( \d+|..?)'/).flatten.reverse
+        person.email = characters[characters.index('>') + 1..characters.rindex('<') - 1].map{|c| Integer(c).chr}.join
+      end
+
       create_person(person, url)
 
       # Shared post and membership properties.
