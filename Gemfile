@@ -7,7 +7,7 @@ gem 'fog'
 gem 'hiredis'
 gem 'multi_xml'
 gem 'nokogiri'
-gem 'pupa', '~> 0.1.10'
+gem 'pupa', '~> 0.2.0'
 gem 'redis-store'
 
 # Server

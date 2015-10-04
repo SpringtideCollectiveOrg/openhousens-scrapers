@@ -4,14 +4,16 @@ require 'bundler/setup'
 require 'json'
 
 require 'active_support/core_ext/hash/slice'
-require 'moped'
+require 'mongo'
 require 'sinatra'
+
+Mongo::Logger.logger.level = Logger::WARN
 
 helpers do
   def connection
     uri = URI.parse(ENV['MONGOLAB_URI'] || 'mongodb://localhost:27017/pupa')
-    connection = Moped::Session.new(["#{uri.host}:#{uri.port}"], database: uri.path[1..-1])
-    connection.login(uri.user, uri.password) if uri.user && uri.password
+    connection = Mongo::Client.new(["#{uri.host}:#{uri.port}"], database: uri.path[1..-1])
+    connection = connection.with(user: uri.user, password: uri.password) if uri.user && uri.password
     connection
   end
 
